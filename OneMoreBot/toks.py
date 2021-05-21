@@ -1,0 +1,4 @@
+aiesec_vrn_main_token = '7ce302776767e5cf65aa88e51686f018eb0f1ac404017b62dbf202c31499f71a856459d6223e567179a2b'
+registration_sheets_token = ''
+changelink_vrn_main_token = '021dfad73afc7662207660c08c64799cca2b234df99c34a17cacb010a82c23f84957fd6e0e0a0da5a26d8'
+
