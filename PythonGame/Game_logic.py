@@ -41,8 +41,28 @@ class Ball(pygame.sprite.Sprite):
                 self.rect.x += width
 
 
+    def drop_down(self, column, row):
+        self.rect.x = column * 100
+        self.rect.y = row * 100 + 100
+
 class Game_field(pygame.sprite.Sprite):
+    balls_field = [[None, None, None, None, None, None, None],
+                   [None, None, None, None, None, None, None],
+                   [None, None, None, None, None, None, None],
+                   [None, None, None, None, None, None, None],
+                   [None, None, None, None, None, None, None],
+                   [None, None, None, None, None, None, None],
+                   [None, None, None, None, None, None, None]]
+
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = game_field_model
         self.rect = self.image.get_rect()
+
+    def get_new_ball(self, ball, ball_position):
+        for i in 6, 5, 4, 3, 2, 1, 0:
+            if self.balls_field[i][ball_position] is None:
+                self.balls_field[i][ball_position] = ball
+                return i
+        else:
+            return -1

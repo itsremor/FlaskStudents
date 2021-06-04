@@ -25,6 +25,8 @@ def open_game_window():
     make_move = True
     prev_keys = -1
 
+    new_ball_position = 0
+
     while running:
         clock.tick(FPS)
 
@@ -32,6 +34,7 @@ def open_game_window():
             new_ball = Game_logic.Ball()
             all_sprites.add(new_ball)
             new_ball_flag = False
+            new_ball.move(100 * new_ball_position)
 
         keys = pygame.key.get_pressed()
         if keys != prev_keys:
@@ -41,18 +44,31 @@ def open_game_window():
         if keys[pygame.K_RIGHT]:
             if make_move:
                 new_ball.move(100)
+                if new_ball_position != 6:
+                    new_ball_position += 1
             make_move = False
 
         if keys[pygame.K_LEFT]:
             if make_move:
                 new_ball.move(-100)
+                if new_ball_position != 0:
+                    new_ball_position -= 1
+            make_move = False
+
+        if keys[pygame.K_DOWN]:
+            if make_move:
+                marker = game_field.get_new_ball(new_ball, new_ball_position)
+                if marker == -1:
+                    running = False
+                else:
+                    new_ball.drop_down(new_ball_position, marker)
+                new_ball_flag = True
             make_move = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        screen.fill(Colors.RED)
         all_sprites.update()
         all_sprites.draw(screen)
         pygame.display.flip()
