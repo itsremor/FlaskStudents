@@ -28,8 +28,8 @@ class Player(pygame.sprite.Sprite):
 class Ball(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        ball_value = random.randint(1, 7)
-        self.image = ball_models[ball_value]
+        self.ball_value = random.randint(1, 7)
+        self.image = ball_models[self.ball_value]
         self.rect = self.image.get_rect()
 
     def move(self, width):
@@ -40,12 +40,13 @@ class Ball(pygame.sprite.Sprite):
             if not self.rect.left + width < 0:
                 self.rect.x += width
 
-
     def drop_down(self, column, row):
         self.rect.x = column * 100
         self.rect.y = row * 100 + 100
 
+
 class Game_field(pygame.sprite.Sprite):
+    score = 0
     balls_field = [[None, None, None, None, None, None, None],
                    [None, None, None, None, None, None, None],
                    [None, None, None, None, None, None, None],
@@ -59,10 +60,42 @@ class Game_field(pygame.sprite.Sprite):
         self.image = game_field_model
         self.rect = self.image.get_rect()
 
-    def get_new_ball(self, ball, ball_position):
+    def get_new_ball(self, ball, ball_col):
         for i in 6, 5, 4, 3, 2, 1, 0:
-            if self.balls_field[i][ball_position] is None:
-                self.balls_field[i][ball_position] = ball
+            if self.balls_field[i][ball_col] is None:
+                self.balls_field[i][ball_col] = ball
                 return i
         else:
             return -1
+
+    def check_horizontal_line(self, row):
+        counter = 0
+        for i in range(0, 7, +1):
+            if not self.balls_field[row][i] is None:
+                counter += 1
+        return counter
+
+    def check_vertical_line(self, column):
+        counter = 0
+        for i in range(0, 7, +1):
+            if not self.balls_field[i][column] is None:
+                counter += 1
+        return counter
+
+    def is_need_to_remove(self, ball_row, ball_col):
+        if not self.balls_field[ball_row][ball_col] is None:
+            if self.check_vertical_line(ball_col) == self.balls_field[ball_row][ball_col].ball_value:
+                return True
+            elif self.check_horizontal_line(ball_row) == self.balls_field[ball_row][ball_col].ball_value:
+                return True
+        return False
+
+    def remove_from_game_field(self, ball_row, ball_column, all_sprites):
+        if self.is_need_to_remove(ball_row, ball_column):
+            all_sprites.remove(self.balls_field[ball_row][ball_column])
+            self.balls_field[ball_row][ball_column] = None
+
+    def check_all_field(self, all_sprites):
+        for i in range(0, 7, +1):
+            for j in range(0, 7, +1):
+                self.remove_from_game_field(i, j, all_sprites)

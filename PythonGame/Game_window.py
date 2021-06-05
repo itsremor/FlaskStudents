@@ -15,11 +15,11 @@ def open_game_window():
     running = True
     all_sprites = pygame.sprite.Group()
 
-    player = Game_logic.Ball()
+
     game_field = Game_logic.Game_field()
 
+    font = pygame.font.SysFont('arial', 72)
     all_sprites.add(game_field)
-    # all_sprites.add(player)
 
     new_ball_flag = True
     make_move = True
@@ -29,6 +29,8 @@ def open_game_window():
 
     while running:
         clock.tick(FPS)
+
+        game_field.check_all_field(all_sprites)
 
         if new_ball_flag:
             new_ball = Game_logic.Ball()
@@ -62,8 +64,13 @@ def open_game_window():
                     running = False
                 else:
                     new_ball.drop_down(new_ball_position, marker)
-                new_ball_flag = True
-            make_move = False
+                    new_ball_flag = True
+                    make_move = False
+            # #удаляет спрайт, а потом и сам шарик с поля
+            # all_sprites.remove(game_field.balls_field[marker][new_ball_position])
+            # game_field.balls_field[marker][new_ball_position] = None
+
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
