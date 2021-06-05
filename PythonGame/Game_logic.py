@@ -106,6 +106,24 @@ class Game_field(pygame.sprite.Sprite):
             self.remove_from_game_field(i.row, i.column, all_sprites)
 
 
+    def drop_balls_down(self, all_sprites):
+        flag_line_drop = False
+        for i in range(0, 6, +1):
+            for j in range(0, 7, +1):
+                if not self.balls_field[i][j] is None:
+                    if self.balls_field[i+1][j] is None:
+                        self.balls_field[i+1][j] = self.balls_field[i][j]
+                        self.balls_field[i][j] = None
+                        self.balls_field[i+1][j].rect.y += 100
+                        i = 0
+                        j = 0
+                        flag_line_drop = True
+                        break
+                if flag_line_drop:
+                    break
+
+
+
 class Row_and_column():
     def __init__(self, row, column):
         self.row = row

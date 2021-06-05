@@ -17,9 +17,10 @@ def open_game_window():
 
 
     game_field = Game_logic.Game_field()
-
-    font = pygame.font.SysFont('arial', 72)
     all_sprites.add(game_field)
+
+    pygame.font.SysFont('arial', 72)
+    font1 = pygame.font.Font(None, 30)
 
     new_ball_flag = True
     make_move = True
@@ -30,6 +31,10 @@ def open_game_window():
     while running:
         clock.tick(FPS)
 
+        score = font1.render(f'Score is: ' + str(game_field.score), True, Colors.BLACK)
+        screen.blit(score, (530, 810))
+        pygame.display.update()
+
         game_field.check_all_field(all_sprites)
 
         if new_ball_flag:
@@ -39,6 +44,14 @@ def open_game_window():
             new_ball.move(100 * new_ball_position)
 
         keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_UP]:
+            if make_move:
+                new_ball.move(100)
+                if new_ball_position != 6:
+                    new_ball_position += 1
+            make_move = False
+
         if keys != prev_keys:
             make_move = True
         prev_keys = pygame.key.get_pressed()
@@ -70,7 +83,7 @@ def open_game_window():
             # all_sprites.remove(game_field.balls_field[marker][new_ball_position])
             # game_field.balls_field[marker][new_ball_position] = None
 
-
+        game_field.drop_balls_down(all_sprites)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
