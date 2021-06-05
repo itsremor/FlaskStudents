@@ -46,7 +46,6 @@ class Ball(pygame.sprite.Sprite):
 
 
 class Game_field(pygame.sprite.Sprite):
-    score = 0
     balls_field = [[None, None, None, None, None, None, None],
                    [None, None, None, None, None, None, None],
                    [None, None, None, None, None, None, None],
@@ -59,6 +58,7 @@ class Game_field(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = game_field_model
         self.rect = self.image.get_rect()
+        self.score = 0
 
     def get_new_ball(self, ball, ball_col):
         for i in 6, 5, 4, 3, 2, 1, 0:
@@ -91,11 +91,22 @@ class Game_field(pygame.sprite.Sprite):
         return False
 
     def remove_from_game_field(self, ball_row, ball_column, all_sprites):
-        if self.is_need_to_remove(ball_row, ball_column):
+        #if self.is_need_to_remove(ball_row, ball_column):
             all_sprites.remove(self.balls_field[ball_row][ball_column])
             self.balls_field[ball_row][ball_column] = None
 
     def check_all_field(self, all_sprites):
+        row_and_columns = []
         for i in range(0, 7, +1):
             for j in range(0, 7, +1):
-                self.remove_from_game_field(i, j, all_sprites)
+                if self.is_need_to_remove(i, j):
+                    row_and_columns.append(Row_and_column(i,j))
+        self.score += len(row_and_columns)
+        for i in row_and_columns:
+            self.remove_from_game_field(i.row, i.column, all_sprites)
+
+
+class Row_and_column():
+    def __init__(self, row, column):
+        self.row = row
+        self.column = column
